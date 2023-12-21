@@ -1,15 +1,21 @@
 import express ,{Request,Response} from "express";
 import {config} from "dotenv";
 config();
+import morgan from "morgan"
+import appRouter from "./routes/index.js";
 
+//server
 const app = express();
 
 //middleware
 app.use(express.json());
 
-app.get("/hello",(req:Request,res:Response)=>{
-    console.log("Hello OpenAI")
-    res.send("Hello OpenAI")
-})
+//remove it in production
+app.use(morgan('dev'))
+
+//router
+app.use('/api/v1',appRouter);
+
+
 
 export default app;

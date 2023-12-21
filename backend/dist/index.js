@@ -3,15 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const app = (0, express_1.default)();
-//middleware
-app.use(express_1.default.json());
-app.get("/hello", (req, res) => {
-    console.log("Hello OpenAI");
-    res.send("Hello OpenAI");
-});
-app.listen(5000, () => {
-    console.log("Server Open");
-});
+const app_js_1 = __importDefault(require("./app.js"));
+const connection_js_1 = require("./db/connection.js");
+const PORT = process.env.PORT || 5000;
+(0, connection_js_1.connectToDatabase)()
+    .then(() => {
+    app_js_1.default.listen(PORT, () => {
+        console.log("Server Open & Connected To Database");
+    });
+}).catch((error) => console.log(error));
 //# sourceMappingURL=index.js.map
