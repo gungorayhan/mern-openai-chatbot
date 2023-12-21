@@ -1,16 +1,11 @@
-import express ,{Request,Response} from "express";
+import app from "./app.js"
+import { connectToDatabase } from "./db/connection.js"
 
-const app = express();
-
-//middleware
-app.use(express.json());
-
-app.get("/hello",(req:Request,res:Response)=>{
-    console.log("Hello OpenAI")
-    res.send("Hello OpenAI")
+const PORT = process.env.PORT || 5000;
+connectToDatabase()
+.then(()=>{
+    app.listen(PORT,()=>{
+        console.log("Server Open & Connected To Database");
 })
+}).catch((error)=>console.log(error));
 
-
-app.listen(5000,()=>{
-    console.log("Server Open")
-})
