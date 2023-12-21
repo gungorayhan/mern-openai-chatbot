@@ -1,0 +1,11 @@
+[33mcommit 1c68f6ea0cc408498231f0217c154ffba82c6632[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/router[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m, [m[1;32mfeature/db-baglan[m[33m)[m
+Author: AYHAN GÜNGÖR <gngr.ayhan@gmail.com>
+Date:   Thu Dec 21 10:49:36 2023 +0300
+
+    db-baglan
+
+[33mcommit e0f917287b36e06902b6062a04979657eb6e1406[m
+Author: AYHAN GÜNGÖR <gngr.ayhan@gmail.com>
+Date:   Wed Dec 20 16:41:30 2023 +0300
+
+    backend paketleri kuruldu ve sunucu ayağa kaldırıldı
