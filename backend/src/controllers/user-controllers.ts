@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import User from "../models/User";
 import { compare, hash } from "bcrypt";
 import { createToken } from "../utils/token-manager";
@@ -24,8 +24,11 @@ export const userSignup = async (req: Request, res: Response) => {
     try {
         const { name, email, password } = req.body;
 
-        const existingUser = await User.find({email});
-        if(existingUser)return res.status(401).send("User already registered");
+        const existingUser = await User.findOne({email});
+        
+        if(existingUser) {
+            return res.status(401).send("User already registered");
+        }
 
         const hashedPassword = await hash(password, 10);
 
@@ -98,6 +101,7 @@ export const userLogin = async (req:Request,res:Response)=>{
             signed:true
         })
 
+
         return res.status(201).json({
             message:"OK",
             name:user.name,
@@ -113,3 +117,58 @@ export const userLogin = async (req:Request,res:Response)=>{
         })
     }
 }
+
+
+
+export const verifyUser = async (req:Request,res:Response,next:NextFunction)=>{
+    try {
+        const user = await User.findById({_id:res.locals.jwtData.id});
+        if(!user){
+            res.status(401).send("User not register or token malfunctioned");
+        }
+
+        if(user._id.toString() !== res.locals.jwtData.id){
+            res.status(401).send("Incorrent Password");
+        }
+
+        return res.status(200).json({
+            message:"OK",
+            name:user.name,
+            email:user.email
+        })
+
+    } catch (error) {
+         console.log(error);
+        console.log(error)
+        return res.status(200).json({
+            message:"ERROR",
+            causes:error.message
+        })
+    }
+}
+
+
+export const userLogout=async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+        const user = await User.findById(res.locals.jwtData.id)
+        if(!user) {
+            return res.status(401).send("User not register")
+        }
+        if(user._id.toString() !== res.locals.jwtData.id){
+            return res.status(401).send("Permisions didnt match")
+        }
+
+        res.clearCookie(COOKIE_NAME,{
+            httpOnly:true,
+            domain:"localhost",
+            signed:true,
+            path:"/"
+        })
+        return res
+        .status(200)
+        .json({ message: "OK", name: user.name, email: user.email });
+    } catch (error) {
+      console.log(error);
+      return res.status(200).json({ message: "ERROR", cause: error.message });
+    }
+  };
